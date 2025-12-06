@@ -1,11 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { postsApi, PostsParams } from "../api/posts-api";
+// hooks/use-post.ts
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { postsApi } from "../api/posts-api";
 import { postKeys } from "../api/posts-keys";
 
-export function usePosts(params?: PostsParams) {
-  return useQuery({
+export function usePosts(params?: { search?: string; status?: string }) {
+  return useInfiniteQuery({
     queryKey: postKeys.list(params),
-    queryFn: () => postsApi.getAll(params),
-    refetchOnMount: false,
+    queryFn: ({ pageParam: cursor }) => postsApi.getAll({ ...params, cursor }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 }

@@ -23,11 +23,13 @@ const Page: FC<PageProps> = async ({ searchParams }) => {
 
     const { search, status } = await searchParams
 
+
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery({
+    await queryClient.prefetchInfiniteQuery({
         queryKey: postKeys.list({ search, status }),
         queryFn: () => postsApi.getAll({ search, status }),
+        initialPageParam: undefined,
     });
 
     return (

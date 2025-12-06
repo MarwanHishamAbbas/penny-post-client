@@ -14,14 +14,15 @@ export type Post = {
 };
 
 export type PostsResponse = {
-  total: number;
-  rows: Post[];
-  limit: number;
+  nextCursor?: string;
+  posts: Post[];
+  hasMore: boolean;
 };
 
 export type PostsParams = {
   search?: string;
   status?: string;
+  cursor?: string;
 };
 
 export type CreatePostData = {
@@ -39,6 +40,7 @@ export const postsApi = {
 
     if (params?.search) cleanParams.search = params.search;
     if (params?.status) cleanParams.status = params.status;
+    if (params?.cursor) cleanParams.cursor = params.cursor;
 
     const queryString =
       Object.keys(cleanParams).length > 0
