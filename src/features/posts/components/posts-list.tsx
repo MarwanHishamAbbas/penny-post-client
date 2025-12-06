@@ -4,12 +4,12 @@ import { Button } from "@/src/components/ui/button";
 import { usePosts } from "../hooks/use-post";
 import {
     Card,
-    CardContent,
+    CardTitle,
     CardDescription,
     CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/src/components/ui/card"
+    CardHeader
+} from '@/src/components/ui/card'
+
 import { SearchCommand } from "@/src/components/search-command";
 
 type PostsListProps = {
@@ -84,25 +84,6 @@ export function PostsList({ searchParams }: PostsListProps) {
                                         {post.content.substring(0, 150)}...
                                     </CardDescription>
                                 </CardHeader>
-                                <CardContent className="space-y-3">
-                                    <div className="flex gap-2 flex-wrap min-h-8">
-                                        {post.tags.length > 0 ? (
-                                            post.tags.map((tag) => (
-                                                <span
-                                                    key={tag}
-                                                    className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))
-                                        ) : (
-                                            <span className="text-xs text-gray-400">No tags</span>
-                                        )}
-                                    </div>
-                                    <p className="text-sm text-gray-600 font-medium">
-                                        {post.category || "Uncategorized"}
-                                    </p>
-                                </CardContent>
                                 <CardFooter className="border-t pt-4">
                                     <p className="text-sm text-gray-500">
                                         By {post.author_name}

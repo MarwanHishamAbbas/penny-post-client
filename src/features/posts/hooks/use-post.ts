@@ -1,9 +1,8 @@
-// hooks/use-post.ts
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { postsApi } from "../api/posts-api";
 import { postKeys } from "../api/posts-keys";
 
-export function usePosts(params?: { search?: string; status?: string }) {
+export function usePosts(params?: { status?: string }) {
   return useInfiniteQuery({
     queryKey: postKeys.list(params),
     queryFn: ({ pageParam: cursor }) => postsApi.getAll({ ...params, cursor }),
@@ -12,9 +11,10 @@ export function usePosts(params?: { search?: string; status?: string }) {
   });
 }
 
-export function useSearch() {
-  return useMutation({
-    mutationKey: postKeys.list(),
-    mutationFn: () => postsApi.search(),
+export function useSearchPosts(params?: { search: string | undefined }) {
+  return useQuery({
+    queryKey: postKeys.list(params),
+    queryFn: () => postsApi.searchAll({ ...params }),
+    enabled: !!params?.search,
   });
 }

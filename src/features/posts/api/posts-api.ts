@@ -10,7 +10,6 @@ export type Post = {
   author_name: string;
   overview: string;
   category: string;
-  tags: string[];
 };
 
 export type PostsResponse = {
@@ -30,7 +29,6 @@ export type CreatePostData = {
   content: string;
   author_id: number;
   category_id?: number;
-  tags?: number[];
   status?: "published" | "draft";
 };
 
@@ -38,7 +36,6 @@ export const postsApi = {
   getAll: (params?: PostsParams) => {
     const cleanParams: Record<string, string> = {};
 
-    if (params?.search) cleanParams.search = params.search;
     if (params?.status) cleanParams.status = params.status;
     if (params?.cursor) cleanParams.cursor = params.cursor;
 
@@ -49,12 +46,19 @@ export const postsApi = {
     return fetcher<PostsResponse>(`/posts${queryString}`);
   },
 
-  getById: (id: number) => {
-    return fetcher<{ post: Post }>(`/posts/${id}`);
+  searchAll: (params?: PostsParams) => {
+    const cleanParams: Record<string, string> = {};
+    if (params?.search) cleanParams.search = params.search;
+
+    const queryString =
+      Object.keys(cleanParams).length > 0
+        ? "?" + new URLSearchParams(cleanParams).toString()
+        : "";
+    return fetcher<PostsResponse>(`/posts/search${queryString}`);
   },
 
-  search: () => {
-    return fetcher<{ posts: Post[] }>(`/posts/search`);
+  getById: (id: number) => {
+    return fetcher<{ post: Post }>(`/posts/${id}`);
   },
 
   create: (data: CreatePostData) => {
