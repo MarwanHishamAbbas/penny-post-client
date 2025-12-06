@@ -10,6 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/src/components/ui/card"
+import { SearchCommand } from "@/src/components/search-command";
 
 type PostsListProps = {
     searchParams: {
@@ -27,6 +28,10 @@ export function PostsList({ searchParams }: PostsListProps) {
         isLoading,
         error
     } = usePosts(searchParams);
+
+
+
+
 
 
 
@@ -64,6 +69,7 @@ export function PostsList({ searchParams }: PostsListProps) {
 
     return (
         <main className="container mx-auto px-4 py-10 max-w-7xl">
+            <SearchCommand />
             <div className="space-y-10">
                 {/* Render all pages */}
                 {data.pages.map((page, pageIndex) => (

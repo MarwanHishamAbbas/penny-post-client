@@ -53,8 +53,12 @@ export const postsApi = {
     return fetcher<{ post: Post }>(`/posts/${id}`);
   },
 
+  search: () => {
+    return fetcher<{ posts: Post[] }>(`/posts/search`);
+  },
+
   create: (data: CreatePostData) => {
-    return fetcher<{ message: string; post: Post }>("/posts", {
+    return fetcher<{ message: string; post: Post }>("/posts/create", {
       method: "POST",
       body: data,
     });
