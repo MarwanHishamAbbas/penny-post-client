@@ -1,7 +1,9 @@
 
-import { MailCheck } from 'lucide-react'
+import VerifyEmailform from '@/src/features/auth/components/verify-email-form'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import React, { FC } from 'react'
 
 type VerifyEmailPageProps = {
@@ -12,6 +14,10 @@ const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
 
     const { email, token } = await searchParams
 
+    if (!email && !token) {
+        redirect('/register')
+    }
+
 
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
@@ -21,13 +27,10 @@ const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
                         Penny Post
                     </Link>
                 </div>
-                {token ? <p>Email Verified</p> : <div className="flex flex-1 items-center justify-center text-center">
-                    <div className="w-full max-w-sm mx-auto">
-                        <MailCheck className='mx-auto size-20 stroke-green-600' />
-                        An email has been sent to {email}
+                <div className='grid place-content-center h-full'>
+                    <VerifyEmailform email={email} token={token} />
 
-                    </div>
-                </div>}
+                </div>
             </div>
             <div className="bg-muted relative hidden lg:block">
                 <Image

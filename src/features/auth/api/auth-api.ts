@@ -18,6 +18,16 @@ export interface RegisterResponse {
   };
 }
 
+export interface VerifyEmailResponse {
+  message: string;
+  data: {
+    userId: string;
+    name: string;
+    email: string;
+    redirectUrl: string;
+  };
+}
+
 export interface LoginData {
   email: string;
   password: string;
@@ -103,10 +113,8 @@ export const authApi = {
   },
 
   // Resend verification email
-  resendVerification: (email: string) => {
-    return fetcher("/auth/resend-verification", {
-      method: "POST",
-      body: { email },
-    });
+  verifyEmail: (token: string) => {
+    const queryString = "?" + new URLSearchParams({ token }).toString();
+    return fetcher<VerifyEmailResponse>(`/auth/verify-email${queryString}`);
   },
 };

@@ -5,6 +5,16 @@ export class ApiError extends Error {
   constructor(message: string, public status: number, public data?: unknown) {
     super(message);
     this.name = "ApiError";
+    this.status = status;
+    this.data = data;
+
+    // Ensure proper prototype chain for instanceof checks
+    Object.setPrototypeOf(this, ApiError.prototype);
+
+    // Capture stack trace (optional but good for debugging)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ApiError);
+    }
   }
 }
 
@@ -23,7 +33,7 @@ export async function fetcher<T>(
     method = "GET",
     body,
     headers = {},
-    credentials = "include", // Important: include cookies for auth
+    credentials = "include",
   } = options || {};
 
   const config: RequestInit = {
@@ -32,7 +42,7 @@ export async function fetcher<T>(
       "Content-Type": "application/json",
       ...headers,
     },
-    credentials, // This sends cookies with requests
+    credentials,
   };
 
   if (body) {
@@ -42,11 +52,21 @@ export async function fetcher<T>(
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
+    const errorData = await response.json();
+
+    const errorObj = {
+      name: "ApiError",
+      message: errorData.message || response.statusText,
+      status: response.status,
+      data: errorData,
+      isApiError: true,
+    };
+
+    // Create error from the object
     throw new ApiError(
-      error.message || "Something went wrong",
-      response.status,
-      error
+      errorObj.message || response.statusText,
+      errorObj.status,
+      errorObj.data
     );
   }
 
@@ -56,6 +76,5 @@ export async function fetcher<T>(
   }
 
   const data = await response.json();
-
   return data;
 }
