@@ -13,9 +13,10 @@ import {
 } from "@/src/components/ui/field"
 import { Input } from "@/src/components/ui/input"
 import { Button } from "@/src/components/ui/button"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Spinner } from "@/src/components/ui/spinner"
+import { useRegister } from "../hooks/use-register"
+import { Checkbox } from "@/src/components/ui/checkbox"
 
 const registerSchema = z.object({
     name: z
@@ -26,6 +27,9 @@ const registerSchema = z.object({
         .min(1, "Email is required"),
     password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
     confirmPassword: z.string().min(8, { message: 'Please confirm your password' }),
+    agreeTerms: z.boolean().refine((val) => val === true, {
+        message: "You must agree to the terms and conditions",
+    }),
 })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
@@ -34,34 +38,34 @@ const registerSchema = z.object({
 
 const RegisterForm = ({ }) => {
 
-    const router = useRouter()
+
+    const { mutate: registerUser, isPending } = useRegister();
+
 
     const form = useForm({
         defaultValues: {
             name: "",
             email: "",
             password: "",
-            confirmPassword: ''
+            confirmPassword: '',
+            agreeTerms: false
         },
         validators: {
             onSubmit: registerSchema,
         },
-        onSubmit: async ({ value }) => {
-            // Simulate a network delay (e.g., 1 second)
-            await new Promise(resolve => setTimeout(resolve, 3000));
+        onSubmit: ({ value }) => {
 
-            console.log("Mock API received:", value);
+            registerUser({
+                email: value.email,
+                name: value.name,
+                password: value.password,
+            });
 
-            // Simulate a successful response
-            return { success: true, message: "Form submitted successfully!" };
-            // setTimeout(() => {
-            //     router.push(`/verify-email?email=${encodeURIComponent(value.email)}`);
-            // }, 2000);
+
         },
 
-    })
 
-    console.log(form.state.isSubmitting)
+    })
 
     return <form
         className="flex flex-col gap-6"
@@ -169,13 +173,57 @@ const RegisterForm = ({ }) => {
                 }}
 
             </form.Field>
-            <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting]}
+            <form.Field
+                name="agreeTerms"
             >
-                {([canSubmit, isSubmitting]) => (
-                    <Button type="submit" disabled={!canSubmit}>
-                        {isSubmitting && <Spinner />}
-                        {isSubmitting ? "Creating Account" : 'Create Account'}
+                {(field) => {
+                    const isInvalid =
+                        field.state.meta.isTouched && !field.state.meta.isValid
+                    return (
+                        <Field className="" data-invalid={isInvalid}>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox
+                                    id={`agree-terms`}
+                                    name={field.name}
+                                    checked={field.state.value}
+                                    onCheckedChange={(checked) =>
+                                        field.handleChange(checked === true)
+                                    }
+                                />
+                                <FieldLabel
+                                    htmlFor={`agree-terms`}
+                                    className="font-normal"
+                                >
+                                    I agree to the{" "}
+                                    <Link
+                                        href="/terms"
+
+                                    >
+                                        Terms of Service
+                                    </Link>{" "}
+                                    and{" "}
+                                    <Link
+                                        href="/privacy"
+
+                                    >
+                                        Privacy Policy
+                                    </Link>
+                                </FieldLabel>
+                            </div>
+
+                            {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                        </Field>
+                    )
+                }}
+            </form.Field>
+
+            <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting, isPending]}
+            >
+                {([canSubmit, isSubmitting, isPending]) => (
+                    <Button type="submit" disabled={!canSubmit || isPending}>
+                        {isSubmitting || isPending && <Spinner />}
+                        {isSubmitting || isPending ? "Creating Account" : 'Create Account'}
                     </Button>
                 )}
             </form.Subscribe>
@@ -194,9 +242,9 @@ const RegisterForm = ({ }) => {
                 Login with GitHub
             </Button>
             <FieldDescription className="text-center">
-                Don&apos;t have an account?{" "}
+                Already have an account?{" "}
                 <Link href="/login" >
-                    Sign up
+                    Login
                 </Link>
             </FieldDescription>
         </Field>

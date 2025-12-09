@@ -1,9 +1,18 @@
-import RegisterForm from '@/src/features/auth/components/register-form'
+
+import { MailCheck } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+import React, { FC } from 'react'
 
-const RegisterPage = () => {
+type VerifyEmailPageProps = {
+    searchParams: Promise<{ email: string, token?: string }>
+}
+
+const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
+
+    const { email, token } = await searchParams
+
+
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -12,11 +21,13 @@ const RegisterPage = () => {
                         Penny Post
                     </Link>
                 </div>
-                <div className="flex flex-1 items-center justify-center">
-                    <div className="w-full max-w-sm">
-                        <RegisterForm />
+                {token ? <p>Email Verified</p> : <div className="flex flex-1 items-center justify-center text-center">
+                    <div className="w-full max-w-sm mx-auto">
+                        <MailCheck className='mx-auto size-20 stroke-green-600' />
+                        An email has been sent to {email}
+
                     </div>
-                </div>
+                </div>}
             </div>
             <div className="bg-muted relative hidden lg:block">
                 <Image
@@ -33,4 +44,4 @@ const RegisterPage = () => {
     )
 }
 
-export default RegisterPage
+export default VerifyEmailPage
