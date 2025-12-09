@@ -22,6 +22,7 @@ export async function fetcher<T>(
 
   const config: RequestInit = {
     method,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
       ...headers,
