@@ -57,7 +57,6 @@ export interface User {
   avatar_url: string | null;
   email_verified: boolean;
   created_at: string;
-  updated_at: string;
 }
 
 export interface CurrentUserResponse {

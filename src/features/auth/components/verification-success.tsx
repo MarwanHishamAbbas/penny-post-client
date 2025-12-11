@@ -2,14 +2,14 @@
 
 import { CheckCircle2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/src/components/ui/alert"
-import { Button } from "@/src/components/ui/button"
+import { buttonVariants } from "@/src/components/ui/button"
+import Link from "next/link"
 
 interface VerificationSuccessProps {
     email: string
-    onContinue?: () => void
 }
 
-export function VerificationSuccess({ email, onContinue }: VerificationSuccessProps) {
+export function VerificationSuccess({ email }: VerificationSuccessProps) {
     return (
         <div className="flex items-center justify-center  bg-background p-4">
             <div className="w-full max-w-md">
@@ -44,9 +44,10 @@ export function VerificationSuccess({ email, onContinue }: VerificationSuccessPr
                 </div>
 
                 {/* Continue button */}
-                <Button onClick={onContinue} className="w-full">
-                    Continue to Dashboard
-                </Button>
+                <Link href={'/'} className={buttonVariants()}>
+                    Continue to Penny Post
+
+                </Link>
             </div>
         </div>
     )

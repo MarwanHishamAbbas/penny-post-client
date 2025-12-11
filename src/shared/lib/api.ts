@@ -23,6 +23,7 @@ type FetcherOptions = {
   body?: unknown;
   headers?: Record<string, string>;
   credentials?: "include" | "omit" | "same-origin";
+  retryCount?: number;
 };
 
 export async function fetcher<T>(
@@ -34,6 +35,7 @@ export async function fetcher<T>(
     body,
     headers = {},
     credentials = "include",
+    retryCount = 0, // Add retry tracking
   } = options || {};
 
   const config: RequestInit = {
@@ -50,6 +52,30 @@ export async function fetcher<T>(
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+
+  // 🔄 AUTO-REFRESH ON 401
+  if (response.status === 401 && retryCount === 0) {
+    try {
+      // Attempt to refresh tokens
+      await fetch(`${API_BASE_URL}/auth/refresh`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      // Retry original request with new tokens
+      return fetcher<T>(endpoint, {
+        ...options,
+        retryCount: 1, // Prevent infinite loops
+      });
+    } catch (refreshError) {
+      // Refresh failed - user needs to login
+      throw new ApiError(
+        "Session expired. Please login again.",
+        401,
+        refreshError
+      );
+    }
+  }
 
   if (!response.ok) {
     const errorData = await response.json();

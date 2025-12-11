@@ -1,18 +1,9 @@
-
-import VerifyEmailform from '@/src/features/auth/components/verify-email-form'
-
+import LoginForm from '@/src/features/auth/components/login-form'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FC } from 'react'
+import React from 'react'
 
-type VerifyEmailPageProps = {
-    searchParams: Promise<{ email: string, token?: string }>
-}
-
-const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
-
-    const { email, token } = await searchParams
-
+const LoginPage = () => {
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
             <div className="flex flex-col gap-4 p-6 md:p-10">
@@ -21,9 +12,10 @@ const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
                         Penny Post
                     </Link>
                 </div>
-                <div className='grid place-content-center h-full'>
-                    <VerifyEmailform email={email} token={token} />
-
+                <div className="flex flex-1 items-center justify-center">
+                    <div className="w-full max-w-sm">
+                        <LoginForm />
+                    </div>
                 </div>
             </div>
             <div className="bg-muted relative hidden lg:block">
@@ -41,4 +33,4 @@ const VerifyEmailPage: FC<VerifyEmailPageProps> = async ({ searchParams }) => {
     )
 }
 
-export default VerifyEmailPage
+export default LoginPage

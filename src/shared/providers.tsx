@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FC, ReactNode, useState } from 'react';
+import { AuthProvider } from '../features/auth/context/auth-context';
 
 type ProvidersProps = {
     children: ReactNode
@@ -23,7 +24,10 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            {children}
+            <AuthProvider>
+
+                {children}
+            </AuthProvider>
         </QueryClientProvider>
     )
 }
