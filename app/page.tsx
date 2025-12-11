@@ -1,3 +1,4 @@
+
 import { type FC } from 'react'
 
 type HomePageProps = {
@@ -5,7 +6,7 @@ type HomePageProps = {
 }
 
 const HomePage: FC<HomePageProps> = ({ }) => {
-  return <div>HomePage</div>
+  return <div> </div>
 }
 
 export default HomePage

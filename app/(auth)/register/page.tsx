@@ -1,7 +1,7 @@
 import RegisterForm from '@/src/features/auth/components/register-form'
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+
 
 const RegisterPage = () => {
     return (
@@ -24,7 +24,7 @@ const RegisterPage = () => {
                     placeholder="blur"
                     blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
                     fill
-                    src="/placeholder.avif"
+                    src="/money.png"
                     alt="Image"
                     className="absolute inset-0 h-full w-full object-cover"
                 />
