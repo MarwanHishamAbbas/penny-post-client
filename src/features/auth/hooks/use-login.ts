@@ -22,7 +22,7 @@ export function useLogin() {
 
       // Redirect to dashboard after a short delay
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/");
       }, 1000);
     },
     onError: (error: ApiError) => {

@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Public routes that don't require authentication
 const publicRoutes = [
   "/",
   "/login",
@@ -9,22 +8,22 @@ const publicRoutes = [
   "/verify-email",
   "/terms",
   "/privacy",
+  "/about",
+  "/authors",
+  "/categories",
 ];
-
-// Auth routes that logged-in users should NOT access
 const authRoutes = ["/login", "/register", "/verify-email"];
 
 export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const sessionToken = request.cookies.get("session_token")?.value;
 
-  // 🔒 1. Prevent logged-in users from accessing auth pages
+  // 🔒 1. If has cookie, assume logged in (let backend verify)
   if (sessionToken && isAuthRoute(pathname)) {
-    const homeUrl = new URL("/", request.url);
-    return NextResponse.redirect(homeUrl);
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // 🔐 2. Prevent unauthenticated users from accessing protected pages
+  // 🔐 2. If no cookie, redirect to login
   if (!sessionToken && !isPublicRoute(pathname)) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);

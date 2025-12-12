@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { User, authApi } from "../api/auth-api";
 import { ApiError } from "@/src/shared/lib/api";
@@ -51,13 +51,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async (logoutAll: boolean = false) => {
+    setIsLoading(true)
     try {
       await authApi.logout(logoutAll);
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
+      setIsLoading(false);
       setUser(null);
-      router.push("/auth/login");
+      router.push("/login");
     }
   };
 

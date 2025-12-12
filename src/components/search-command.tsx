@@ -22,7 +22,7 @@ export function SearchCommand() {
     const { data } = useSearchPosts({ search: debouncedSearch })
     return (
         <div>
-            <Button size={'icon-lg'} variant={'secondary'} onClick={() => setOpen(true)}><Search /></Button>
+            <Button size={'icon-sm'} variant={'secondary'} className="rounded-full" onClick={() => setOpen(true)}><Search /></Button>
             <CommandDialog open={open} onOpenChange={setOpen}>
                 <CommandInput value={search} onValueChange={(e) => setSearch(e)} placeholder="Search a post..." />
                 <CommandList>
