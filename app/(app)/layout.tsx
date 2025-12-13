@@ -26,7 +26,10 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          {children}
+          <main className="max-w-7xl mx-auto px-2">
+
+            {children}
+          </main>
         </Providers>
         <Toaster />
       </body>

@@ -2,15 +2,8 @@
 
 import { Button } from "@/src/components/ui/button";
 import { usePosts } from "../hooks/use-post";
-import {
-    Card,
-    CardTitle,
-    CardDescription,
-    CardFooter,
-    CardHeader
-} from '@/src/components/ui/card'
 
-import { SearchCommand } from "@/src/components/search-command";
+import PostCard from "./post-card";
 
 type PostsListProps = {
     searchParams: {
@@ -28,10 +21,6 @@ export function PostsList({ searchParams }: PostsListProps) {
         isLoading,
         error
     } = usePosts(searchParams);
-
-
-
-
 
 
 
@@ -69,27 +58,12 @@ export function PostsList({ searchParams }: PostsListProps) {
 
     return (
         <main className="container mx-auto px-4 py-10 max-w-7xl">
-            <SearchCommand />
             <div className="space-y-10">
                 {/* Render all pages */}
                 {data.pages.map((page, pageIndex) => (
                     <div key={pageIndex} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {page.posts.map((post) => (
-                            <Card key={post.id} className="hover:shadow-lg transition-shadow duration-200">
-                                <CardHeader>
-                                    <CardTitle className="line-clamp-2 min-h-14">
-                                        {post.title || "Untitled Post"}
-                                    </CardTitle>
-                                    <CardDescription className="line-clamp-3 min-h-18">
-                                        {post.content.substring(0, 150)}...
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardFooter className="border-t pt-4">
-                                    <p className="text-sm text-gray-500">
-                                        By {post.author_name}
-                                    </p>
-                                </CardFooter>
-                            </Card>
+                            <PostCard post={post} key={post.id} />
                         ))}
                     </div>
                 ))}
@@ -97,7 +71,7 @@ export function PostsList({ searchParams }: PostsListProps) {
 
             {/* Load More Section */}
             <div className="mt-12 flex flex-col items-center gap-4">
-                {hasNextPage ? (
+                {hasNextPage && (
                     <Button
                         onClick={() => fetchNextPage()}
                         disabled={isFetchingNextPage}
@@ -113,13 +87,6 @@ export function PostsList({ searchParams }: PostsListProps) {
                             'Load More Posts'
                         )}
                     </Button>
-                ) : (
-                    data.pages.length > 0 && (
-                        <div className="text-center py-8">
-                            <p className="text-gray-500 text-lg">🎉 You&apos;ve reached the end!</p>
-                            <p className="text-gray-400 text-sm mt-2">No more posts to load</p>
-                        </div>
-                    )
                 )}
             </div>
         </main>

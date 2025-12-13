@@ -24,6 +24,7 @@ type FetcherOptions = {
   headers?: Record<string, string>;
   credentials?: "include" | "omit" | "same-origin";
   retryCount?: number;
+  skipAutoRefresh?: boolean;
 };
 
 export async function fetcher<T>(
@@ -35,7 +36,8 @@ export async function fetcher<T>(
     body,
     headers = {},
     credentials = "include",
-    retryCount = 0, // Add retry tracking
+    retryCount = 0,
+    skipAutoRefresh = false,
   } = options || {};
 
   const config: RequestInit = {
@@ -54,7 +56,7 @@ export async function fetcher<T>(
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
   // 🔄 AUTO-REFRESH ON 401
-  if (response.status === 401 && retryCount === 0) {
+  if (response.status === 401 && retryCount === 0 && !skipAutoRefresh) {
     try {
       // Attempt to refresh tokens
       await fetch(`${API_BASE_URL}/auth/refresh`, {

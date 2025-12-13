@@ -101,6 +101,7 @@ export const authApi = {
     return fetcher("/auth/logout", {
       method: "POST",
       body: { logout_all: logoutAll },
+      skipAutoRefresh: true,
     });
   },
 

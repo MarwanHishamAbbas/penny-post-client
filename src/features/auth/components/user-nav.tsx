@@ -69,7 +69,7 @@ const UserNav: FC<UserNavProps> = ({ user }) => {
         )
     } else {
         return (
-            <Link href={'/login'} className={buttonVariants({ size: "sm", className: 'rounded-full' })}>
+            <Link href={'/login'} className={buttonVariants({ size: "sm", className: 'rounded-full!' })}>
                 Login
             </Link>
         )

@@ -1,6 +1,7 @@
+// /src/features/auth/context/auth-context.tsx
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { User, authApi } from "../api/auth-api";
 import { ApiError } from "@/src/shared/lib/api";
@@ -22,26 +23,35 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const isLoggingOutRef = useRef(false);
+  // ✅ Skip auth check on public routes
+  const publicRoutes = ['/login', '/register', '/verify-email', '/', '/terms', '/privacy'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
-  // Check auth status on mount and route changes
   useEffect(() => {
-    checkAuth();
-  }, [pathname]);
+    // ✅ Skip checkAuth if we're in the logout process
+    if (!isLoggingOutRef.current && !isPublicRoute) {
+      checkAuth();
+    }
+  }, [pathname, isPublicRoute]); // This runs on EVERY route change!
 
   const checkAuth = async () => {
+    // ✅ Double check here too
+    if (isLoggingOutRef.current) return;
+
     setIsLoading(true);
     try {
       const response = await authApi.getCurrentUser();
       setUser(response.data.user);
     } catch (error: unknown) {
-      // Clear user on auth error
-      console.log(error)
-      setUser(null);
+      // ✅ Only clear user if NOT logging out
+      if (!isLoggingOutRef.current) {
+        setUser(null);
+      }
 
-      // Only log non-401 errors (401 is normal when not logged in)
       if ((error as ApiError)?.status !== 401) {
         console.error("Auth check failed:", error);
       }
@@ -51,19 +61,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const logout = async (logoutAll: boolean = false) => {
-    setIsLoading(true)
+    // ✅ Set flag BEFORE doing anything
+    isLoggingOutRef.current = true;
+    setIsLoading(true); // Show loading state
+    setUser(null); // Clear user immediately
+
     try {
       await authApi.logout(logoutAll);
     } catch (error) {
-      console.error("Logout error:", error);
+      console.log("Logout completed", error);
     } finally {
       setIsLoading(false);
-      setUser(null);
+
+      // ✅ Keep flag true longer (until after redirect)
+      setTimeout(() => {
+        isLoggingOutRef.current = false;
+      }, 2000); // Increased to 2 seconds
+
       router.push("/login");
     }
   };
 
   const refreshUser = async () => {
+    if (isLoggingOutRef.current) return;
+
     try {
       const response = await authApi.getCurrentUser();
       setUser(response.data.user);

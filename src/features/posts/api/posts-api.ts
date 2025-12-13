@@ -10,11 +10,12 @@ export type Post = {
   author_name: string;
   overview: string;
   category: string;
+  cover_url: string;
 };
 
 export type PostsResponse = {
   nextCursor?: string;
-  posts: Post[];
+  posts: Omit<Post, "content" | "updated_at" | "status">[];
   hasMore: boolean;
 };
 
