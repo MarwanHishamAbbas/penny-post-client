@@ -10,7 +10,7 @@ const Navbar = async () => {
     const { user } = await getServerSession()
 
     return (
-        <header className='bg-white h-[60px] shadow-[0_1px_42px_rgba(0,0,0,0.1)] '>
+        <header className='bg-white/70 h-[60px] shadow-[0_1px_42px_rgba(0,0,0,0.1)] fixed top-0 left-0 right-0 backdrop-blur-3xl'>
             <nav className='max-w-7xl px-2 mx-auto flex items-center justify-between h-full '>
                 <h1 className='text-base md:text-lg'><strong>Penny</strong>Post</h1>
                 <ul className='flex items-center gap-6 text-sm max-sm:hidden'>

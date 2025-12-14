@@ -27,7 +27,7 @@ export function SearchCommand() {
     return (
         <div>
             <Button size={'icon-sm'} variant={'secondary'} className="rounded-full" onClick={() => setOpen(true)}><Search /></Button>
-            <CommandDialog open={open} onOpenChange={setOpen}>
+            <CommandDialog open={open} onOpenChange={setOpen} >
                 <CommandInput value={search} onValueChange={(e) => setSearch(e)} placeholder="Search a post..." />
                 <CommandList>
                     {data?.posts.length === 0 && <CommandEmpty>No Results</CommandEmpty>}

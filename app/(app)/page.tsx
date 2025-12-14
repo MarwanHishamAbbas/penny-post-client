@@ -1,5 +1,7 @@
+import Hero from '@/src/components/pages/home/hero';
 import { postsApi } from '@/src/features/posts/api/posts-api';
 import { postKeys } from '@/src/features/posts/api/posts-keys';
+
 import { PostsList } from '@/src/features/posts/components/posts-list';
 import {
   HydrationBoundary,
@@ -33,11 +35,13 @@ const Page: FC<PageProps> = async ({ searchParams }) => {
   });
 
 
-
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <PostsList searchParams={{ search, status }} />
-    </HydrationBoundary>
+    <main>
+      <Hero />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <PostsList searchParams={{ search, status }} />
+      </HydrationBoundary>
+    </main>
   )
 }
 

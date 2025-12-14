@@ -23,6 +23,7 @@ export type PostsParams = {
   search?: string;
   status?: string;
   cursor?: string;
+  is_featured?: boolean;
 };
 
 export type CreatePostData = {
@@ -39,7 +40,9 @@ export const postsApi = {
 
     if (params?.status) cleanParams.status = params.status;
     if (params?.cursor) cleanParams.cursor = params.cursor;
-
+    if (params?.is_featured) {
+      cleanParams.is_featured = "true";
+    }
     const queryString =
       Object.keys(cleanParams).length > 0
         ? "?" + new URLSearchParams(cleanParams).toString()

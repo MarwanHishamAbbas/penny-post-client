@@ -33,8 +33,8 @@ const UserNav: FC<UserNavProps> = ({ user }) => {
     if (user) {
         return (
             <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-                <DropdownMenuTrigger asChild>
-                    <Button variant='secondary' size='icon' className='overflow-hidden rounded-full'>
+                <DropdownMenuTrigger title='' asChild>
+                    <Button variant='secondary' size='icon' className=' rounded-full relative'>
                         <Image
                             src='/money.png'
                             className='size-8 rounded-full'
@@ -42,8 +42,12 @@ const UserNav: FC<UserNavProps> = ({ user }) => {
                             height={32}
                             alt='User avatar'
                         />
+                        <span className='border-background absolute -right-0.5 -bottom-0.5 size-3 rounded-full border-2 bg-green-600 dark:bg-green-400'>
+                            <span className='sr-only'>Online</span>
+                        </span>
                     </Button>
                 </DropdownMenuTrigger>
+                s
                 <DropdownMenuContent className='w-56'>
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuGroup>
