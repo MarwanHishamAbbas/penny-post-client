@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { postsApi } from "../api/posts-api";
 import { postKeys } from "../api/posts-keys";
 
-export function usePosts(params?: { status?: string }) {
+export function usePosts(params?: { is_featured?: boolean }) {
   return useInfiniteQuery({
     queryKey: postKeys.list(params),
     queryFn: ({ pageParam: cursor }) => postsApi.getAll({ ...params, cursor }),

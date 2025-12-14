@@ -47,7 +47,6 @@ const UserNav: FC<UserNavProps> = ({ user }) => {
                         </span>
                     </Button>
                 </DropdownMenuTrigger>
-                s
                 <DropdownMenuContent className='w-56'>
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuGroup>

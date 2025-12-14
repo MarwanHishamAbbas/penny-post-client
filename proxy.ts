@@ -1,17 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const publicRoutes = [
-  "/",
-  "/login",
-  "/register",
-  "/verify-email",
-  "/terms",
-  "/privacy",
-  "/about",
-  "/authors",
-  "/categories",
-];
+const privateRoutes = ["/about", "/authors", "/categories"];
 const authRoutes = ["/login", "/register", "/verify-email"];
 
 export default function proxy(request: NextRequest) {
@@ -24,7 +14,7 @@ export default function proxy(request: NextRequest) {
   }
 
   // 🔐 2. If no cookie, redirect to login
-  if (!sessionToken && !isPublicRoute(pathname)) {
+  if (!sessionToken && isPrivateRoute(pathname)) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
@@ -33,8 +23,8 @@ export default function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-function isPublicRoute(pathname: string): boolean {
-  return publicRoutes.some(
+function isPrivateRoute(pathname: string): boolean {
+  return privateRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`)
   );
 }

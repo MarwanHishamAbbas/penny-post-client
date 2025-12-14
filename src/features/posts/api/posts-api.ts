@@ -21,7 +21,6 @@ export type PostsResponse = {
 
 export type PostsParams = {
   search?: string;
-  status?: string;
   cursor?: string;
   is_featured?: boolean;
 };
@@ -31,14 +30,12 @@ export type CreatePostData = {
   content: string;
   author_id: number;
   category_id?: number;
-  status?: "published" | "draft";
 };
 
 export const postsApi = {
   getAll: (params?: PostsParams) => {
     const cleanParams: Record<string, string> = {};
 
-    if (params?.status) cleanParams.status = params.status;
     if (params?.cursor) cleanParams.cursor = params.cursor;
     if (params?.is_featured) {
       cleanParams.is_featured = "true";

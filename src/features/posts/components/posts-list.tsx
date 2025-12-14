@@ -5,23 +5,15 @@ import { usePosts } from "../hooks/use-post";
 
 import PostCard from "./post-card";
 
-type PostsListProps = {
-    searchParams: {
-        search?: string;
-        status?: string;
-    };
-};
 
-export function PostsList({ searchParams }: PostsListProps) {
+
+export function PostsList() {
     const {
         data,
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = usePosts(searchParams);
-
-
-
+    } = usePosts();
 
 
 

@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import Navbar from "@/src/components/navbar";
 
 import { Inter } from 'next/font/google'
+import Footer from "@/src/components/ui/footer";
 
 // Configure the Inter font loader
 // Variable fonts like Inter do not require specifying a weight
@@ -32,6 +33,7 @@ export default function RootLayout({
           </main>
         </Providers>
         <Toaster />
+        <Footer />
       </body>
     </html>
   );
